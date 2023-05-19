@@ -29,7 +29,3 @@ def generate_orders(qty: int) -> None:
                 )
             billing.append(new_billing_item)
         ServiceBill.objects.bulk_create(billing)
-
-
-
-

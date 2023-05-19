@@ -46,28 +46,28 @@ WHERE main_req.totals > 1.2 * (SELECT avg(totals) from main_req)
 
 -- 4. *Найти всех клиентов средний чек у которых на 10% выше чем средний чек по их городу
 
-WITH customer_ave_bill AS (SELECT cord.id, c.id client, c.firstname fname, c.lastname lname, sum(cs.totalprice) totals
-                           FROM carservice_order cord
-                                    INNER JOIN carservice_servicebill cs ON cord.id = cs.order_id
-                                    INNER JOIN carservice_car cc on cord.car_id = cc.vin
-                                    INNER JOIN carservice_customer c on c.id = cc.owner_id
-                                    INNER JOIN carservice_city cc2 on cc2.id = c.city_id
-                           WHERE cc2.cityname = 'Minsk'
-                           GROUP BY cord.id, c.id, c.firstname, c.lastname, cord.id)
+SELECT
+    mainq.customerid, mainq.firstname, mainq.lastname, mainq.cityname,
+    mainq.average_for_customer, mainq.average_in_city, count(*) number_of_orders_exceeding_avg
 
+FROM
+    (SELECT cc.id customerid, cc.firstname firstname , cc.lastname lastname, ccit.cityname cityname,  co.id orderid, list_of_bills.billamount,
+           round(avg(list_of_bills.billamount) OVER (PARTITION BY ccit.cityname), 2) average_in_city,
+           round(avg(list_of_bills.billamount) OVER (PARTITION BY cc.lastname), 2) average_for_customer
+    FROM carservice_customer cc
+    INNER JOIN carservice_city ccit on ccit.id = cc.city_id
+    INNER JOIN carservice_car c on cc.id = c.owner_id
+    INNER JOIN carservice_order co  on c.vin = co.car_id
+    INNER JOIN (
+        SELECT ord.id ids, round(SUM(s.totalprice)::numeric, 2) billamount
+        FROM carservice_order ord
+        INNER JOIN carservice_servicebill s on ord.id = s.order_id
+        GROUP BY ids
+        ) list_of_bills ON co.id = list_of_bills.ids) AS mainq
 
-SELECT counted_avg_for_client.*,  (
-                            SELECT round(avg(cab2.totals)::numeric, 2) FROM customer_ave_bill cab2
-                            ) AS average_by_city FROM
-(SELECT DISTINCT cab.client, cab.fname, cab.lname,
-        round(
-            avg(cab.totals)
-            OVER (PARTITION BY cab.client)
-            ) AS ave_by_client
-FROM customer_ave_bill cab) counted_avg_for_client
-WHERE ave_by_client > 1.1 * (
-                            SELECT avg(cab2.totals) FROM customer_ave_bill cab2
-                            )
+WHERE average_for_customer > average_in_city * 1.1
+GROUP BY mainq.customerid, mainq.firstname, mainq.lastname, mainq.cityname,
+        mainq.average_for_customer, mainq.average_in_city
 
 
 
@@ -122,7 +122,6 @@ INNER JOIN carservice_carbrand cc2 on cc2.id = cc.brand_id
 INNER JOIN carservice_order co on cc.vin = co.car_id
 INNER JOIN carservice_servicebill cs on co.id = cs.order_id
 GROUP BY c.id, c.firstname, c.lastname, cc2.brandname
-
 
 
 SELECT c.id, c.firstname, c.lastname, cc2.brandname, count(co.id) total_orders,

@@ -40,6 +40,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'carservice.apps.CarserviceConfig',
     'corsheaders',
+    'schema_graph',
+    'django_spaghetti',
+    'django_extensions',
+
 ]
 
 MIDDLEWARE = [
@@ -130,3 +134,18 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+SPAGHETTI_SAUCE = {
+    'apps': ['carservice'],
+    'show_fields': True,
+    'exclude': {'auth': ['user']},
+}
+
+GRAPH_MODELS = {
+    'all_applications': False,
+    'group_models': False,
+    'app_labels': ["carservice",
+                 ],
+}
+
