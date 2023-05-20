@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'schema_graph',
     'django_spaghetti',
     'django_extensions',
-
+    'rest_framework',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "corsheaders.middleware.CorsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 ROOT_URLCONF = 'sql_carservice.urls'
@@ -149,3 +151,6 @@ GRAPH_MODELS = {
                  ],
 }
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+    ]

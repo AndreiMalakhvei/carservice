@@ -1,11 +1,10 @@
 from django.contrib import admin
 from django.urls import path, include
 
-from carservice.views import run_sql1
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('sql1/', run_sql1)
+    path('api/', include('carservice.urls'))
 ]
 
 # pip install django-schema-graph
@@ -22,3 +21,7 @@ urlpatterns += [
 # pip install django-extensions
 # install in OS: https://graphviz.org/download/
 # pip install pygraphviz
+
+urlpatterns += [
+    path('__debug__/', include('debug_toolbar.urls')),
+]

@@ -1,6 +1,6 @@
 -- Найти всех клиентов из указанного города с суммой чека меньше указанного на 1000
 
-SELECT ccust.firstname, ccust.lastname, count(billqry.cordid)
+SELECT ccust.id, ccust.firstname, ccust.lastname, count(billqry.cordid) AS numberofbills
 FROM carservice_customer ccust
 INNER JOIN carservice_city ccity on ccust.city_id = ccity.id
 INNER JOIN carservice_car ccar1 ON ccust.id = ccar1.owner_id
@@ -12,7 +12,7 @@ INNER JOIN (
         HAVING sum(csb.totalprice) < 2000
 ) billqry ON ccar1.vin = billqry.cvin
 WHERE ccity.cityname = 'Minsk'
-GROUP BY ccust.firstname, ccust.lastname
+GROUP BY ccust.id, ccust.firstname, ccust.lastname
 
 
 -- 2. Вывести по порядку убывания выручки всех городов за указанный период времени
@@ -32,28 +32,27 @@ ORDER BY subtotal DESC
 -- 3. Найти все заказы, сумма которых выше на 20% BYN среднего заказа по данному городу
 
 WITH main_req AS (
-SELECT cord.id, cord.car_id, sum(cs.totalprice) totals FROM carservice_order cord
+SELECT cord.id, c.firstname, c.lastname, sum(cs.totalprice) billsum FROM carservice_order cord
 INNER JOIN carservice_servicebill cs ON cord.id = cs.order_id
 INNER JOIN carservice_car cc on cord.car_id = cc.vin
 INNER JOIN carservice_customer c on c.id = cc.owner_id
 INNER JOIN carservice_city cc2 on cc2.id = c.city_id
 WHERE cc2.cityname = 'Minsk'
-GROUP BY cord.id, cord.car_id
+GROUP BY cord.id, c.firstname, c.lastname
 )
 SELECT * FROM main_req
-WHERE main_req.totals > 1.2 * (SELECT avg(totals) from main_req)
+WHERE main_req.billsum > 1.2 * (SELECT avg(billsum) FROM main_req)
 
 
 -- 4. *Найти всех клиентов средний чек у которых на 10% выше чем средний чек по их городу
 
 SELECT
-    mainq.customerid, mainq.firstname, mainq.lastname, mainq.cityname,
-    mainq.average_for_customer, mainq.average_in_city, count(*) number_of_orders_exceeding_avg
-
+    mainq.id, mainq.firstname, mainq.lastname, mainq.cityname,
+    mainq.avg_cust, mainq.average_in_city
 FROM
-    (SELECT cc.id customerid, cc.firstname firstname , cc.lastname lastname, ccit.cityname cityname,  co.id orderid, list_of_bills.billamount,
+    (SELECT cc.id, cc.firstname firstname , cc.lastname lastname, ccit.cityname cityname,  co.id orderid, list_of_bills.billamount,
            round(avg(list_of_bills.billamount) OVER (PARTITION BY ccit.cityname), 2) average_in_city,
-           round(avg(list_of_bills.billamount) OVER (PARTITION BY cc.lastname), 2) average_for_customer
+           round(avg(list_of_bills.billamount) OVER (PARTITION BY cc.lastname), 2) avg_cust
     FROM carservice_customer cc
     INNER JOIN carservice_city ccit on ccit.id = cc.city_id
     INNER JOIN carservice_car c on cc.id = c.owner_id
@@ -65,9 +64,9 @@ FROM
         GROUP BY ids
         ) list_of_bills ON co.id = list_of_bills.ids) AS mainq
 
-WHERE average_for_customer > average_in_city * 1.1
-GROUP BY mainq.customerid, mainq.firstname, mainq.lastname, mainq.cityname,
-        mainq.average_for_customer, mainq.average_in_city
+WHERE avg_cust > average_in_city * 1.1
+GROUP BY mainq.id, mainq.firstname, mainq.lastname, mainq.cityname,
+        mainq.avg_cust, mainq.average_in_city
 
 
 
