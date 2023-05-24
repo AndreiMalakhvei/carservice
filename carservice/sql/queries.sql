@@ -1,5 +1,4 @@
 -- Найти всех клиентов из указанного города с суммой чека меньше указанного на 1000
-
 SELECT ccust.id, ccust.firstname, ccust.lastname, count(billqry.cordid) AS numberofbills
 FROM carservice_customer ccust
 INNER JOIN carservice_city ccity on ccust.city_id = ccity.id
@@ -16,7 +15,6 @@ GROUP BY ccust.id, ccust.firstname, ccust.lastname
 
 
 -- 2. Вывести по порядку убывания выручки всех городов за указанный период времени
-
 SELECT ccity.cityname, coalesce(sum(billed_cust.totals), 0) subtotal FROM carservice_city ccity
 LEFT JOIN (SELECT ccust.id, ccust.city_id cust_city, sum(cs.totalprice) totals
            FROM carservice_customer ccust
@@ -30,7 +28,6 @@ GROUP BY ccity.cityname
 ORDER BY subtotal DESC
 
 -- 3. Найти все заказы, сумма которых выше на 20% BYN среднего заказа по данному городу
-
 WITH main_req AS (
 SELECT cord.id, c.firstname, c.lastname, sum(cs.totalprice) billsum FROM carservice_order cord
 INNER JOIN carservice_servicebill cs ON cord.id = cs.order_id
@@ -45,7 +42,6 @@ WHERE main_req.billsum > 1.2 * (SELECT avg(billsum) FROM main_req)
 
 
 -- 4. *Найти всех клиентов средний чек у которых на 10% выше чем средний чек по их городу
-
 SELECT
     mainq.id, mainq.firstname, mainq.lastname, mainq.cityname,
     mainq.avg_cust, mainq.average_in_city
@@ -72,7 +68,6 @@ GROUP BY mainq.id, mainq.firstname, mainq.lastname, mainq.cityname,
 
 -- * Разобраться с оконными функциями SQL. row_number, dense_rank, rank.
 -- Написать по одному запросу с использованием каждой из эих функций
-
 -- row_number ко всему запросу (нумеруем сумму чека от большей к меньшей)
 SELECT c.id, c.firstname, c.lastname, co.id num_order, sum(cs.totalprice) bill_amount,
         row_number() over (ORDER BY sum(cs.totalprice) DESC) AS bill

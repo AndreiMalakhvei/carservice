@@ -8,10 +8,18 @@ from rest_framework.exceptions import ParseError
 from datetime import date
 from django.db import connection
 
+
 class SubAvg(Subquery):
     template = "(SELECT avg(targetfield) FROM (%(subquery)s) _avg)"
     output_field = models.IntegerField()
 
+
+def dictfetchall(cursor):
+    res = cursor.fetchall()
+    if not len(res):
+        raise ParseError(detail="No results found")
+    columns = [col[0] for col in cursor.description]
+    return [dict(zip(columns, row)) for row in res]
 
 
 # 1. Найти всех клиентов из указанного города с суммой чека меньше указанного на 1000
@@ -60,6 +68,7 @@ class Task2APIView(APIView):
             raise ParseError(detail="No results found")
         return Response({'answer': Task2Serializer(qry, many=True).data})
 
+
 # 3. Найти все заказы, сумма которых выше на 20% BYN среднего заказа по данному городу
 class Task3APIView(APIView):
     def get(self, request):
@@ -82,13 +91,7 @@ class Task3APIView(APIView):
 
 
 # 4. *Найти всех клиентов средний чек у которых на 10% выше чем средний чек по их городу
-class SubAvg(Subquery):
-    template = "(SELECT avg(targetfield) FROM (%(subquery)s) _avg)"
-    output_field = models.IntegerField()
-
-
 class Task4APIView(APIView):
-
     def get(self, request):
         avg_bills_cust = Order.objects.filter(car__owner=OuterRef('pk')).annotate(
             targetfield=Sum('servicebill__totalprice')).values('targetfield')
@@ -108,14 +111,6 @@ class Task4APIView(APIView):
         if not qry.exists():
             raise ParseError(detail="No results found")
         return Response({'answer': Task4Serializer(qry, many=True).data})
-
-
-def dictfetchall(cursor):
-    res = cursor.fetchall()
-    if not len(res):
-        raise ParseError(detail="No results found")
-    columns = [col[0] for col in cursor.description]
-    return [dict(zip(columns, row)) for row in res]
 
 
 class Task1APIViewSQL(APIView):
@@ -145,6 +140,7 @@ class Task1APIViewSQL(APIView):
             qry = dictfetchall(cursor)
             return Response({'answer': Task1Serializer(qry, many=True).data})
 
+
 class Task2APIViewSQL(APIView):
     def get(self, request):
         try:
@@ -173,6 +169,7 @@ class Task2APIViewSQL(APIView):
             qry = dictfetchall(cursor)
             return Response({'answer': Task2Serializer(qry, many=True).data})
 
+
 class Task3APIViewSQL(APIView):
     def get(self, request):
         try:
@@ -195,6 +192,7 @@ class Task3APIViewSQL(APIView):
 
             qry = dictfetchall(cursor)
             return Response({'answer': Task3Serializer(qry, many=True).data})
+
 
 class Task4APIViewSQL(APIView):
     def get(self, request):
@@ -223,4 +221,3 @@ class Task4APIViewSQL(APIView):
 
             qry = dictfetchall(cursor)
             return Response({'answer': Task4Serializer(qry, many=True).data})
-
