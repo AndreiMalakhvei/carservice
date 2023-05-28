@@ -1,32 +1,30 @@
-
+import {NavLink} from "react-router-dom";
 
 const Header = () => {
 
     return (
-        <div className="navbar">
-
-            <div className="navbar-element">
-                <a className="navbar-item" href="#home">Home</a>
-            </div>
-            <div className="navbar-element">
-                <a className="navbar-item" href="#news">News</a>
-            </div>
-            <div className="navbar-element">
-                <div className="dropdown">
-                    <button className="dropbtn">Dropdown
-
-                    </button>
-                    <div className="dropdown-content">
-                        <a href="#">Link 1</a>
-                        <a href="#">Link 2</a>
-                        <a href="#">Link 3</a>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
-
+        <nav>
+            <ul className="menu">
+                <li className="menu-element">
+                    <NavLink to='/home' className="navbar-text" href="#">Home</NavLink>
+                </li>
+                <li className="menu-element">
+                     <NavLink to='/home' className="navbar-text" href="#">New Order</NavLink>
+                </li>
+                <li className="menu-element">
+                     <a className="navbar-text" href="#">Reports</a>
+                    <ul className="sub-menu">
+                        <li><a className="navbar-dropdowntext" href="#">1st Request</a></li>
+                        <li><a className="navbar-dropdowntext" href="#">2nd Request</a></li>
+                        <li><a className="navbar-dropdowntext" href="#">3rd Request</a></li>
+                        <li><NavLink to='/query/4' className="navbar-dropdowntext" href="#">4th Request</NavLink></li>
+                    </ul>
+                </li>
+                <li className="menu-element">
+                     <a className="navbar-text" href="#">LogIn</a>
+                </li>
+            </ul>
+        </nav>
     );
 };
 

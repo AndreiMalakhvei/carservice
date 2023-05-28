@@ -110,7 +110,7 @@ class Task4APIView(APIView):
 
         if not qry.exists():
             raise ParseError(detail="No results found")
-        return Response({'answer': Task4Serializer(qry, many=True).data})
+        return Response(Task4Serializer(qry, many=True).data)
 
 
 class Task1APIViewSQL(APIView):
