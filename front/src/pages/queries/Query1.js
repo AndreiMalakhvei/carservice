@@ -10,6 +10,7 @@ const Query1= () => {
 
     const handleSelect = (event) => {
         setCityValue(event.target.value)
+
         }
 
     useEffect( () =>{
@@ -17,6 +18,7 @@ const Query1= () => {
        axios
         .get('http://127.0.0.1:8000/api/cities/')
         .then(response => {setCitiesList(response.data)})
+
     }, []);
 
 
@@ -27,7 +29,7 @@ const Query1= () => {
                 .get('http://127.0.0.1:8000/api/task3/', {params: {city: cityValue}})
                 .then(response => {
                     setTableData(response.data)
-                    console.log(tableData)
+
                 })
         }
     }, [cityValue]);
@@ -37,9 +39,10 @@ const Query1= () => {
 
    return (<div>
 
+
         <CitiesSelection citiesarray={citiesList}  selected={handleSelect}/>
 
-       {tableData.bills_over_avg.length > 0 &&
+       {tableData.bills_over_avg  &&
            <div>
                <div><h>Average in {cityValue}: {tableData.average_in_city}</h></div>
          <TableDisplay datas={tableData.bills_over_avg}

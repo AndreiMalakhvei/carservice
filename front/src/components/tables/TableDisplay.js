@@ -2,8 +2,8 @@ import React from "react";
 import styled from "./TableDisplay.module.css"
 
 const TableDisplay= (props) => {
-console.log("displaying table")
-    console.log(props.datas)
+
+
     return (
         <div className={styled.tablewrapper}>
             <div>
