@@ -40,7 +40,7 @@ class Task1APIView(APIView):
             annotate(numberofbills=Count('car__order')).values('id', 'firstname', 'lastname', 'numberofbills')
         if not qry.exists():
             raise ParseError(detail="No results found")
-        return Response({'answer': Task1Serializer(qry, many=True).data})
+        return Response(Task1Serializer(qry, many=True).data)
 
 
 # 2. Вывести по порядку убывания выручки всех городов за указанный период времени
@@ -68,7 +68,7 @@ class Task2APIView(APIView):
 
         if not qry.exists():
             raise ParseError(detail="No results found")
-        return Response({'answer': Task2Serializer(qry, many=True).data})
+        return Response(Task2Serializer(qry, many=True).data)
 
 
 # 3. Найти все заказы, сумма которых выше на 20% BYN среднего заказа по данному городу
