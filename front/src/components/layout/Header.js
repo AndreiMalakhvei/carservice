@@ -14,7 +14,7 @@ const Header = () => {
                 <li className="menu-element">
                      <a className="navbar-text" href="#">Reports</a>
                     <ul className="sub-menu">
-                        <li><a className="navbar-dropdowntext" href="#">1st Request</a></li>
+                        <li><NavLink to='/query/1' className="navbar-dropdowntext" href="#">1st Request</NavLink></li>
                         <li><a className="navbar-dropdowntext" href="#">2nd Request</a></li>
                         <li><a className="navbar-dropdowntext" href="#">3rd Request</a></li>
                         <li><NavLink to='/query/4' className="navbar-dropdowntext" href="#">4th Request</NavLink></li>

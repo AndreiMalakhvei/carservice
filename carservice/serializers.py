@@ -1,4 +1,6 @@
 from rest_framework import serializers
+from carservice.models import City
+
 
 class CustomerInfoSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -21,4 +23,11 @@ class Task4Serializer(CustomerInfoSerializer):
     cityname = serializers.CharField()
     avg_cust = serializers.FloatField()
     avg_citys = serializers.FloatField()
+
+
+class CitiesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = City
+        fields = ['id', 'cityname']
+
 

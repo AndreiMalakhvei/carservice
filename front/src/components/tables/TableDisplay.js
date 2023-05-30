@@ -2,32 +2,31 @@ import React from "react";
 import styled from "./TableDisplay.module.css"
 
 const TableDisplay= (props) => {
+console.log("displaying table")
+    console.log(props.datas)
     return (
-        <div>
+        <div className={styled.tablewrapper}>
+            <div>
         <table className={styled.tables}>
 
-            <thead>
-            <tr>
-                <th scope="colId">id</th>
-                <th scope="colTitle">firstname</th>
-                <th scope="colType">lastname</th>
-                <th scope="colDesc">cityname</th>
-                <th scope="colPrice">avg_cust</th>
-                <th scope="colSize">avg_citys</th>
+            <thead className={styled.tableheader}>
+            <tr className={styled.tablerow}>
+                {props.headers.map(header=>
+                    <th className={styled.tableheadercell} scope={header}>{header}</th>
+                )}
             </tr>
             </thead>
-            <tbody>
+            <tbody className={styled.tablebody}>
             {props.datas.map(record =>
                 <tr key={record.id}>
-                    <td>{record.id}</td>
-                    <td>{record.firstname}</td>
-                    <td>{record.lastname}</td>
-                    <td>{record.cityname}</td>
-                    <td>{record.avg_cust}</td>
-                    <td>{record.avg_citys}</td>
-                </tr>)}
+                    {Object.values(record).map(val =>
+                        <td className={styled.tablecell}>{val}</td>
+                    )}
+                </tr>)
+        }
             </tbody>
         </table>
+            </div>
             </div>
     )
 }

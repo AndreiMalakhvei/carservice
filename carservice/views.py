@@ -1,9 +1,11 @@
+from rest_framework import generics
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from carservice.models import Order, Customer, City
 from django.db import models
 from django.db.models import Max, Sum, Avg, Count, F, Q, Subquery, Value, OuterRef, Window, Func, FloatField,Case, When, Value
-from carservice.serializers import Task1Serializer, Task2Serializer, Task3Serializer, Task4Serializer
+from carservice.serializers import Task1Serializer, Task2Serializer, Task3Serializer, Task4Serializer, CitiesSerializer
 from rest_framework.exceptions import ParseError
 from datetime import date
 from django.db import connection
@@ -85,9 +87,9 @@ class Task3APIView(APIView):
 
         if not qry.exists():
             raise ParseError(detail="No results found")
-        return Response({'answer': {'average_in_city': round(avg_bill['avg_bill'], 2),
+        return Response({'average_in_city': round(avg_bill['avg_bill'], 2),
                                     'bills_over_avg': Task3Serializer(qry, many=True).data}
-                         })
+                         )
 
 
 # 4. *Найти всех клиентов средний чек у которых на 10% выше чем средний чек по их городу
@@ -221,3 +223,9 @@ class Task4APIViewSQL(APIView):
 
             qry = dictfetchall(cursor)
             return Response({'answer': Task4Serializer(qry, many=True).data})
+
+
+class CityModelView(generics.ListAPIView):
+    queryset = City.objects.all()
+    serializer_class = CitiesSerializer
+    permission_classes = [AllowAny, ]

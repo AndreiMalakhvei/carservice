@@ -1,3 +1,42 @@
+
+.tablewrapper{
+    background-color: black;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+
+}
+
 .tables{
-    background-color: white;
+    background-color: black;
+    color: #f1ecec;
+    margin: 10px;
+    border-style: dashed;
+    border-collapse:collapse;
+}
+
+.tableheader{
+border-style: dashed;
+}
+
+.tablerow{
+border-style: dashed;
+
+}
+
+.tablebody{
+
+}
+
+
+.tablecell{
+padding:8px;
+border-style: dashed;
+    text-align: center;
+}
+
+.tableheadercell{
+padding:8px;
+border-style: dashed;
+    text-align: center;
 }
