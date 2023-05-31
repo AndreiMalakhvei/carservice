@@ -15,7 +15,7 @@ const Header = () => {
                      <a className="navbar-text" href="#">Reports</a>
                     <ul className="sub-menu">
                         <li><NavLink to='/query/1' className="navbar-dropdowntext" href="#">1st Request</NavLink></li>
-                        <li><a className="navbar-dropdowntext" href="#">2nd Request</a></li>
+                        <li><NavLink to='/query/2' className="navbar-dropdowntext" href="#">2nd Request</NavLink></li>
                         <li><NavLink to='/query/3' className="navbar-dropdowntext" href="#">3rd Request</NavLink></li>
                         <li><NavLink to='/query/4' className="navbar-dropdowntext" href="#">4th Request</NavLink></li>
                     </ul>

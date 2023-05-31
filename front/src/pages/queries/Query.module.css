@@ -1,0 +1,23 @@
+input[type='date'] ::-webkit-calendar-picker-indicator{
+    display: none;
+    -webkit-appearance: none;
+}
+
+.notfound{
+    display:flex;
+    width: 100%;
+    height: 10vh;
+    background-color: black;
+
+    justify-content: center;
+}
+
+.notfoundtext{
+    color: white;
+    border-style: dashed;
+    align-items: center;
+    margin:20px;
+    justify-content: center;
+    padding: 10px;
+
+}

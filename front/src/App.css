@@ -105,3 +105,8 @@ transform: scale(1);
     0 0 102px #0fa,
     0 0 151px #0fa;
 }
+
+.dateinput ::-webkit-calendar-picker-indicator{
+    display: none;
+    -webkit-appearance: none;
+}
