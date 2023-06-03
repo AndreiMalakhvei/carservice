@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from carservice.models import City
+from carservice.models import City, Customer, Order, Car, ServiceWork, CarBrand
 
 
 class CustomerInfoSerializer(serializers.Serializer):
@@ -31,3 +31,39 @@ class CitiesSerializer(serializers.ModelSerializer):
         fields = ['id', 'cityname']
 
 
+class CustomerCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = '__all__'
+
+
+class BrandsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CarBrand
+        fields = '__all__'
+
+
+class CustomersSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Customer
+        fields = ['id', 'firstname', 'lastname']
+
+
+class ServicesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServiceWork
+        fields = ['id', 'work']
+
+
+class CarsSerializer(serializers.ModelSerializer):
+    brandname = serializers.CharField(source='brand.brandname')
+
+    class Meta:
+        model = Car
+        fields = ['vin', 'brandname', 'carmodel', 'regnumber' ]
+
+
+class CarCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Car
+        fields = '__all__'

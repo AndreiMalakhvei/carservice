@@ -2,10 +2,12 @@ from rest_framework import generics
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from carservice.models import Order, Customer, City
+from carservice.models import Order, Customer, City, CarBrand, ServiceWork, ServiceBill, Car
 from django.db import models
 from django.db.models import Max, Sum, Avg, Count, F, Q, Subquery, Value, OuterRef, Window, Func, FloatField,Case, When, Value
-from carservice.serializers import Task1Serializer, Task2Serializer, Task3Serializer, Task4Serializer, CitiesSerializer
+from carservice.serializers import Task1Serializer, Task2Serializer, Task3Serializer, Task4Serializer, CitiesSerializer, \
+    CustomerCreateSerializer, CustomersSerializer, BrandsSerializer, ServicesSerializer, CarsSerializer,\
+    CarCreateSerializer
 from rest_framework.exceptions import ParseError
 from datetime import date
 from django.db import connection
@@ -32,11 +34,12 @@ class Task1APIView(APIView):
             req_city = request.GET['city']
             money_amount = request.GET['limit']
             int_amount = int(money_amount)
+            int_city = int(req_city)
         except (KeyError, ValueError):
             raise ParseError(detail="'city' and 'limit' parameters are required")
 
         bills = Order.objects.annotate(billamount=Sum('servicebill__totalprice')).filter(billamount__lt=int_amount-1000)
-        qry = Customer.objects.filter(city__cityname=req_city).filter(car__order__in=Subquery(bills.values('id'))). \
+        qry = Customer.objects.filter(city__id=int_city).filter(car__order__in=Subquery(bills.values('id'))). \
             annotate(numberofbills=Count('car__order')).values('id', 'firstname', 'lastname', 'numberofbills')
         if not qry.exists():
             raise ParseError(detail="No results found")
@@ -76,9 +79,10 @@ class Task3APIView(APIView):
     def get(self, request):
         try:
             req_city = request.GET['city']
-        except (KeyError):
+            int_city = int(req_city)
+        except (KeyError, ValueError):
             raise ParseError(detail="'city' parameters is required")
-        sub = Order.objects.filter(car__owner__city__cityname=req_city).annotate(billsum=Sum('servicebill__totalprice'),
+        sub = Order.objects.filter(car__owner__city__id=int_city).annotate(billsum=Sum('servicebill__totalprice'),
                                                                                  firstname=F('car__owner__firstname'),
                                                                                  lastname=F('car__owner__lastname'))
         avg_bill = sub.aggregate(avg_bill=Avg('billsum') * 1.2)
@@ -229,3 +233,48 @@ class CityModelView(generics.ListAPIView):
     queryset = City.objects.all()
     serializer_class = CitiesSerializer
     permission_classes = [AllowAny, ]
+
+
+class BrandsModelView(generics.ListAPIView):
+    queryset = CarBrand.objects.all()
+    serializer_class = BrandsSerializer
+
+
+class CustomersModelView(generics.ListAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomersSerializer
+
+
+class CarsModelView(generics.ListAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarsSerializer
+
+    def get_queryset(self):
+        if self.request.query_params:
+            try:
+                customer = int(self.request.query_params.get('customer'))
+            except (ValueError, TypeError):
+                raise ParseError(detail="'customer' parameters is invalid")
+            return Car.objects.filter(owner_id=customer)
+        return Car.objects.all()
+
+
+
+
+class ServiceModelView(generics.ListAPIView):
+    queryset = ServiceWork.objects.all()
+    serializer_class = ServicesSerializer
+
+
+class CustomerCreateView(generics.CreateAPIView):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerCreateSerializer
+
+    # def post(self, request, *args, **kwargs):
+    #     print()
+    #     print()
+
+class CarCreateView(generics.CreateAPIView):
+    queryset = Car.objects.all()
+    serializer_class = CarCreateSerializer
+

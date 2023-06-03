@@ -6,21 +6,12 @@ import RecordNotFound from "../../errorhandlers/RecordNotFound";
 
 const Query3= () => {
     const [tableData, setTableData] = useState([])
-    const [citiesList, setCitiesList] = useState([])
     const [cityValue, setCityValue] = useState()
-
     const [notFound, setNotFound] = useState(false)
 
     const handleSelect = (event) => {
         setCityValue(event.target.value)
         }
-
-    useEffect( () =>{
-       axios
-        .get('http://127.0.0.1:8000/api/cities/')
-        .then(response => {setCitiesList(response.data)})
-    }, []);
-
 
     useEffect(() => {
         if (cityValue) {
@@ -39,7 +30,7 @@ const Query3= () => {
 
    return (<div>
 
-              <CitiesSelection citiesarray={citiesList}  selected={handleSelect}/>
+              <CitiesSelection  selected={handleSelect}/>
 
        {notFound ? <RecordNotFound />: null}
 

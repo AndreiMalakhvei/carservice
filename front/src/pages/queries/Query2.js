@@ -6,19 +6,15 @@ import RecordNotFound from "../../errorhandlers/RecordNotFound";
 
 const Query2= () => {
     const [tableData, setTableData] = useState([])
-
     const startValue = useRef()
     const finValue = useRef()
     const [notFound, setNotFound] = useState(false)
 
     const handleForm= (event) => {
-
     event.preventDefault()
 
       startValue.current = event.target.vstart.value
       finValue.current = event.target.vfinish.value
-
-
 
         if (startValue && finValue) {
             axios
@@ -34,7 +30,6 @@ const Query2= () => {
     }
 
    return (<div>
-
             <form onSubmit={handleForm}>
                 <label htmlFor="start" >Start date</label>
                 <input type="date" className="dateinput" id="vstart" name="vstart"

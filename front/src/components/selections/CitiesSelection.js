@@ -1,17 +1,28 @@
-import styled from "./CitiesSelection.module.css"
+import styled from "./Selection.module.css"
+import {useEffect, useState} from "react";
+import axios from "axios";
 
-const citiesSelection= (props) => {
+const CitiesSelection= (props) => {
+    const [citiesList, setCitiesList] = useState([])
+
+    useEffect( () =>{
+       axios
+        .get('http://127.0.0.1:8000/api/cities/')
+        .then(response => {setCitiesList(response.data)})
+    }, []);
+
+
     return (
              <div className={styled.selectionwrapper}>
             <label className={styled.selectionlabel}>SELECT CITY</label>
             <select name="city"  id="selectedcity" className="formselect" onChange={props.selected}>
-                {props.citiesarray.map(
+                {citiesList.map(
                     city =>
-                        <option key={city.id}  value={city.cityname}> {city.cityname}</option>
+                        <option key={city.id}  value={city.id}> {city.cityname}</option>
                 )}
             </select>
         </div>
     )
 }
 
-export default citiesSelection
+export default CitiesSelection
