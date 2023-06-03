@@ -11,7 +11,15 @@ const CreateCar = () => {
     const [tableData, setTableData] = useState([])
     const [notFound, setNotFound] = useState(false)
 
-
+    async function doGetRequest(id) {
+    await axios
+            .get('http://127.0.0.1:8000/api/cars/', {params: {customer: id}})
+            .then(response => {setTableData(response.data)
+                console.log(response.data)
+            setNotFound(false)
+            })
+            .catch(function (error) {setNotFound(true)})
+    }
 
     const handleForm= (event) => {
     event.preventDefault()
@@ -26,49 +34,19 @@ const CreateCar = () => {
             })
         .then(response => {
             if (response.status === 201) {
-
-                axios
-            .get('http://127.0.0.1:8000/api/cars/', {params: {customer: customer}})
-            .then(response => {setTableData(response.data)
-                console.log(response.data)
-            setNotFound(false)
-            })
-            .catch(function (error) {setNotFound(true)})
-
-
+            doGetRequest(customer)
             }
         })
         .catch(function (error) {
             console.log(error.toString())
         })
-
-        // axios
-        // .get('http://127.0.0.1:8000/api/cars/', {params: {customer: custRef.current}})
-        // .then(response => {setTableData(response.data)
-        //     console.log(response.data)
-        // setNotFound(false)
-        // })
-        // .catch(function (error) {setNotFound(true)})
-
     }
 
    const customerChangeHandler = (event) => {
         event.preventDefault()
         setCustomer(event.target.value)
-
-
-        axios
-        .get('http://127.0.0.1:8000/api/cars/', {params: {customer: event.target.value}})
-        .then(response => {setTableData(response.data)
-        setNotFound(false)
-        })
-        .catch(function (error) {setNotFound(true)})
-   }
-
-
-
-
-
+       doGetRequest(event.target.value)
+    }
 
    return (<div>
 
