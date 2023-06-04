@@ -13,7 +13,7 @@ const Header = () => {
                     <ul className="sub-menu">
                         <li><NavLink to='/create/customer' className="navbar-dropdowntext" href="#">Customer</NavLink></li>
                         <li><NavLink to='/create/car' className="navbar-dropdowntext" href="#">Car</NavLink></li>
-                        <li><NavLink to='/query/3' className="navbar-dropdowntext" href="#">Order</NavLink></li>
+                        <li><NavLink to='/create/order' className="navbar-dropdowntext" href="#">Order</NavLink></li>
                     </ul>
                 </li>
                 <li className="menu-element">

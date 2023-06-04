@@ -1,4 +1,4 @@
-import {useState, useEffect, useRef} from "react";
+import {useState} from "react";
 import axios from "axios";
 import BrandSelection from "../../components/selections/BrandSelection";
 import styled from "./Creates.module.css"
@@ -15,7 +15,6 @@ const CreateCar = () => {
     await axios
             .get('http://127.0.0.1:8000/api/cars/', {params: {customer: id}})
             .then(response => {setTableData(response.data)
-                console.log(response.data)
             setNotFound(false)
             })
             .catch(function (error) {setNotFound(true)})
@@ -60,7 +59,6 @@ const CreateCar = () => {
                               headers={Object.keys(tableData[0])}/>
            }
        </div>
-
 
             <form className={styled.formcontainer} onSubmit={handleForm}>
                 <label htmlFor="vin" className={styled.inputlabel} >VIN</label>

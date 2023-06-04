@@ -52,7 +52,7 @@ class CustomersSerializer(serializers.ModelSerializer):
 class ServicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServiceWork
-        fields = ['id', 'work']
+        fields = '__all__'
 
 
 class CarsSerializer(serializers.ModelSerializer):

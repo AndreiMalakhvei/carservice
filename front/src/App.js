@@ -6,6 +6,7 @@ import Query3 from './pages/queries/Query3'
 import Query2 from './pages/queries/Query2'
 import CreateCustomer from "./pages/create/CreateCustomer";
 import CreateCar from "./pages/create/CreateCar";
+import CreateOrder from "./pages/create/CreateOrder";
 import Home from "./pages/home";
 import React from "react";
 import Layout from "./components/layout/Layout";
@@ -27,6 +28,7 @@ function App() {
                     <Route component={Query2} path='/query/2' />
                     <Route component={CreateCustomer} path='/create/customer' />
                     <Route component={CreateCar} path='/create/car' />
+                    <Route component={CreateOrder} path='/create/order' />
                 </div>
                 </React.Fragment>
             </Switch>
